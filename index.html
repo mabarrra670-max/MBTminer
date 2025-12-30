@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MBTminer Pro V3</title>
+    <title>MBTminer Pro V4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -14,22 +14,16 @@
         .font-orbit { font-family: 'Orbitron', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
         .active-tab { color: #0088cc !important; border-top: 2px solid #0088cc; }
-        
-        /* Area Konten Utama */
-        #main-container { flex: 1; overflow-y: auto; position: relative; padding-bottom: 120px; -webkit-overflow-scrolling: touch; }
+        #main-container { flex: 1; overflow-y: auto; position: relative; padding-bottom: 120px; }
         .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
-        
-        /* Navigasi Fixed */
-        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 85px; background: #070707; border-top: 1px solid rgba(255,255,255,0.08); z-index: 100; display: flex; justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom); }
-        
-        button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 85px; background: #070707; border-top: 1px solid rgba(255,255,255,0.08); z-index: 100; display: flex; justify-content: space-around; align-items: center; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <header class="p-5 flex justify-between items-end border-b border-white/5 bg-black relative z-50">
+    <header class="p-5 flex justify-between items-end border-b border-white/5 bg-black z-50">
         <div>
             <h1 class="text-xl font-black font-orbit text-[#0088cc]">MBT<span class="text-white">MINER</span></h1>
             <p id="user-display" class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Loading...</p>
@@ -43,66 +37,57 @@
     <div id="main-container">
         <section id="page-mining" class="page active text-center">
             <div class="w-44 h-44 rounded-full border-2 border-[#0088cc]/30 flex items-center justify-center mx-auto mb-8 mt-4 bg-[#0088cc]/5 shadow-[0_0_30px_rgba(0,136,204,0.1)]">
-                <i class="fas fa-atom text-6xl text-[#0088cc] animate-[spin_5s_linear_infinite]"></i>
+                <i class="fas fa-atom text-6xl text-[#0088cc] animate-spin"></i>
             </div>
             <p id="speed-display" class="text-3xl font-black font-orbit mb-6">0.00001 <span class="text-xs text-[#0088cc]">TON/M</span></p>
-            <button onclick="claimMining()" class="w-full bg-[#0088cc] py-5 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all shadow-lg">Claim Hasil Mining</button>
-            <p class="text-[10px] text-gray-500 mt-4">Minimal claim: 0.1 TON</p>
+            <button onclick="claimMining()" class="w-full bg-[#0088cc] py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all">Claim Hasil Mining</button>
         </section>
 
         <section id="page-shop" class="page">
             <h2 class="text-xl font-black font-orbit mb-6 text-[#0088cc]">UPGRADE RIGS</h2>
             <div class="space-y-4">
                 <div class="glass p-5 rounded-2xl flex justify-between items-center">
-                    <div>
-                        <h3 class="font-bold">GTX 1660 Super</h3>
-                        <p class="text-[10px] text-green-400">+0.01 TON/Menit</p>
-                    </div>
-                    <button onclick="buyPackage(1, 0.01)" class="bg-[#0088cc] px-6 py-3 rounded-xl font-black text-xs active:scale-90 shadow-md">1 TON</button>
+                    <div><h3 class="font-bold text-sm">GPU GTX 1660</h3><p class="text-[10px] text-green-400">+0.01 TON/M</p></div>
+                    <button onclick="buyPackage(1, 0.01)" class="bg-[#0088cc] px-6 py-3 rounded-xl font-black text-xs active:scale-90">1 TON</button>
                 </div>
                 <div class="glass p-5 rounded-2xl flex justify-between items-center">
-                    <div>
-                        <h3 class="font-bold">RTX 4090 TI</h3>
-                        <p class="text-[10px] text-green-400">+0.10 TON/Menit</p>
-                    </div>
-                    <button onclick="buyPackage(5, 0.10)" class="bg-[#0088cc] px-6 py-3 rounded-xl font-black text-xs active:scale-90 shadow-md">5 TON</button>
+                    <div><h3 class="font-bold text-sm">RTX 4090 TI</h3><p class="text-[10px] text-green-400">+0.10 TON/M</p></div>
+                    <button onclick="buyPackage(5, 0.10)" class="bg-[#0088cc] px-6 py-3 rounded-xl font-black text-xs active:scale-90">5 TON</button>
                 </div>
             </div>
         </section>
 
-        <section id="page-deposit" class="page text-center">
-            <h2 class="text-xl font-black font-orbit mb-6">TOPUP SALDO</h2>
+        <section id="page-topup" class="page text-center">
+            <h2 class="text-xl font-black font-orbit mb-6">ISI SALDO TON</h2>
             <div class="glass p-8 rounded-3xl mb-4">
-                <p class="text-xs text-gray-400 mb-6">Hubungkan dompet untuk isi saldo Wallet Internal Anda.</p>
-                <div id="ton-connect-button" class="flex justify-center mb-4"></div>
+                <p class="text-xs text-gray-400 mb-6">Hubungkan dompet untuk deposit ke Wallet Internal.</p>
+                <div id="ton-connect-button" class="flex justify-center mb-6"></div>
+                
+                <div id="deposit-input-area" class="space-y-4 hidden">
+                    <input type="number" id="dep-amt" placeholder="Jumlah TON" class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-center font-bold text-xl outline-none text-[#0088cc]">
+                    <button onclick="processDeposit()" class="w-full bg-green-600 py-4 rounded-xl font-black text-sm uppercase">Kirim Deposit</button>
+                </div>
             </div>
         </section>
 
         <section id="page-invite" class="page text-center">
-            <h2 class="text-xl font-black font-orbit mb-6 text-[#0088cc]">REFERRAL</h2>
-            <div class="glass p-6 rounded-2xl space-y-5">
-                <p class="text-xs text-gray-300">Dapatkan bonus 1 TON tiap teman yang diundang melakukan deposit pertama!</p>
-                <div class="bg-black/50 p-4 rounded-xl border border-white/10 break-all">
-                    <code id="ref-link" class="text-[10px] text-[#0088cc]">Loading...</code>
-                </div>
-                <button onclick="copyLink()" class="bg-white/10 w-full py-4 rounded-xl font-bold text-xs uppercase active:scale-95 transition-all">Salin Link Undangan</button>
+            <h2 class="text-xl font-black font-orbit mb-4 text-[#0088cc]">INVITE</h2>
+            <div class="glass p-6 rounded-2xl space-y-4">
+                <div class="bg-black/50 p-4 rounded-xl border border-white/10 break-all text-[10px] text-[#0088cc]" id="ref-link">Loading link...</div>
+                <button onclick="copyLink()" class="w-full bg-white/10 py-3 rounded-xl font-bold text-xs uppercase">Copy Link</button>
             </div>
         </section>
 
         <section id="page-profile" class="page">
             <div class="glass p-6 rounded-3xl text-center mb-6">
-                <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Saldo Wallet Internal</p>
-                <p class="text-4xl font-black font-orbit text-green-400"><span id="wallet-display">0.00</span> <span class="text-sm">TON</span></p>
+                <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Internal Balance</p>
+                <p class="text-4xl font-black font-orbit text-green-400"><span id="wallet-display">0.00</span> <span class="text-xs">TON</span></p>
             </div>
-            
-            <div class="glass p-6 rounded-3xl space-y-4 border-red-500/20 border bg-red-500/5">
-                <h3 class="text-xs font-black text-red-500 uppercase tracking-widest">Withdraw (WD)</h3>
-                <div class="space-y-3">
-                    <input type="text" id="wd-addr" placeholder="Alamat Wallet TON (UQ...)" class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-xs outline-none focus:border-red-500 transition-all">
-                    <input type="number" id="wd-amt" placeholder="Jumlah (Min 1 TON)" class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-xs outline-none focus:border-red-500 transition-all">
-                    <button onclick="handleWD()" class="w-full bg-red-600 hover:bg-red-500 py-4 rounded-xl font-black text-xs uppercase shadow-lg shadow-red-900/20 active:scale-95 transition-all">Tarik Saldo Ke Wallet</button>
-                </div>
-                <p class="text-[9px] text-gray-500 text-center italic">Proses WD manual 1-24 jam oleh Admin.</p>
+            <div class="glass p-6 rounded-3xl space-y-4 border-red-500/20 border">
+                <h3 class="text-xs font-black text-red-500 uppercase">Withdraw Assets</h3>
+                <input type="text" id="wd-addr" placeholder="Address Wallet TON" class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-xs outline-none">
+                <input type="number" id="wd-amt" placeholder="Min 1 TON" class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-xs outline-none">
+                <button onclick="handleWD()" class="w-full bg-red-600 py-4 rounded-xl font-black text-xs uppercase">Withdraw Now</button>
             </div>
         </section>
     </div>
@@ -114,7 +99,7 @@
         <button onclick="switchTab('page-shop', this)" class="flex flex-col items-center gap-1 text-gray-500">
             <i class="fas fa-store text-lg"></i><span class="text-[8px] font-bold">SHOP</span>
         </button>
-        <button onclick="switchTab('page-deposit', this)" class="flex flex-col items-center gap-1 text-gray-500">
+        <button onclick="switchTab('page-topup', this)" class="flex flex-col items-center gap-1 text-gray-500">
             <i class="fas fa-wallet text-lg"></i><span class="text-[8px] font-bold">TOPUP</span>
         </button>
         <button onclick="switchTab('page-invite', this)" class="flex flex-col items-center gap-1 text-gray-500">
@@ -146,24 +131,18 @@
         const userId = tg.initDataUnsafe?.user?.id?.toString() || "guest_dev";
         let balance = 0, wallet = 0, speed = 0.00001;
 
-        // GANTI INI DENGAN TOKEN & CHAT ID ANDA
-        const botToken = "7810892630:AAGdU5czSDJw1M61d9ZX8M2dNJVO46bAiAI";
-        const myChatId = "7162757223";
-
         async function loadData() {
             const ref = doc(db, "users", userId);
-            try {
-                const snap = await getDoc(ref);
-                if(snap.exists()){
-                    const d = snap.data();
-                    balance = d.balance || 0;
-                    wallet = d.wallet || 0;
-                    speed = d.speed || 0.00001;
-                } else {
-                    await setDoc(ref, { balance: 0, wallet: 0, speed: 0.00001 });
-                }
-                updateUI();
-            } catch (e) { console.error(e); }
+            const snap = await getDoc(ref);
+            if(snap.exists()){
+                const d = snap.data();
+                balance = d.balance || 0;
+                wallet = d.wallet || 0;
+                speed = d.speed || 0.00001;
+            } else {
+                await setDoc(ref, { balance: 0, wallet: 0, speed: 0.00001 });
+            }
+            updateUI();
         }
 
         function updateUI() {
@@ -174,62 +153,42 @@
             document.getElementById('ref-link').innerText = `https://t.me/MBTminer_bot?start=${userId}`;
         }
 
-        // FUNGSI BELI
-        window.buyPackage = async (cost, addSpeed) => {
-            if (wallet < cost) {
-                tg.showAlert("Saldo Wallet Internal tidak cukup!");
-                return;
+        // FUNGSI TOPUP / DEPOSIT
+        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+            manifestUrl: 'https://mabarrra670-max.github.io/MBTminer/tonconnect-manifest.json',
+            buttonRootId: 'ton-connect-button'
+        });
+
+        // Pantau status wallet
+        tonConnectUI.onStatusChange(walletInfo => {
+            const area = document.getElementById('deposit-input-area');
+            if (walletInfo) {
+                area.classList.remove('hidden');
+            } else {
+                area.classList.add('hidden');
             }
-            tg.showConfirm(`Beli hardware seharga ${cost} TON?`, async (ok) => {
-                if(ok) {
-                    wallet -= cost;
-                    speed += addSpeed;
-                    updateUI();
-                    await updateDoc(doc(db, "users", userId), { wallet, speed });
-                    tg.showAlert("Upgrade Berhasil! Kecepatan bertambah.");
-                }
-            });
-        };
+        });
 
-        // FUNGSI WITHDRAW (Min 1 TON)
-        window.handleWD = async () => {
-            const addr = document.getElementById('wd-addr').value;
-            const amt = parseFloat(document.getElementById('wd-amt').value);
-
-            if(!addr || addr.length < 10) return tg.showAlert("Alamat Wallet tidak valid!");
-            if(isNaN(amt) || amt < 1) return tg.showAlert("Minimal Withdraw adalah 1 TON!");
-            if(wallet < amt) return tg.showAlert("Saldo Wallet Internal Anda tidak cukup!");
+        window.processDeposit = async () => {
+            const amount = document.getElementById('dep-amt').value;
+            if(!amount || amount <= 0) return tg.showAlert("Masukkan jumlah TON!");
 
             try {
-                wallet -= amt;
-                updateUI();
-                await updateDoc(doc(db, "users", userId), { 
-                    wallet: wallet,
-                    history: arrayUnion({ type: 'Withdraw', amount: amt, addr: addr, date: new Date().toLocaleString() })
-                });
-
-                // Kirim Notif ke Admin
-                const msg = `🔔 *WD REQUEST MBTMINER*%0A👤 User: ${tg.initDataUnsafe?.user?.first_name}%0A💰 Amount: ${amt} TON%0A🏦 Alamat: \`${addr}\``;
-                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${myChatId}&text=${msg}&parse_mode=Markdown`);
-
-                tg.showAlert("Permintaan Withdraw dikirim! Mohon tunggu konfirmasi admin.");
-                document.getElementById('wd-amt').value = "";
-            } catch (e) { tg.showAlert("Error: " + e.message); }
+                const transaction = {
+                    validUntil: Math.floor(Date.now() / 1000) + 300,
+                    messages: [{
+                        address: "UQC8yBpZY5KwBftoV5SaXc43HSgyXki85iF9qNzNgF6uVNpd", // Wallet Admin
+                        amount: (amount * 1000000000).toString() // TON to NanoTON
+                    }]
+                };
+                await tonConnectUI.sendTransaction(transaction);
+                tg.showAlert("Transaksi dikirim! Saldo akan diupdate admin manual setelah masuk.");
+            } catch (e) {
+                tg.showAlert("Batal atau Error: " + e.message);
+            }
         };
 
-        // LOOPING MINING
-        setInterval(() => {
-            balance += (speed / 60);
-            document.getElementById('balance-display').innerText = balance.toFixed(6);
-        }, 1000);
-
-        // AUTOSAVE FIREBASE
-        setInterval(async () => {
-            if(userId !== "guest_dev") {
-                await updateDoc(doc(db, "users", userId), { balance });
-            }
-        }, 10000);
-
+        // LAIN-LAIN
         window.switchTab = (id, btn) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -238,25 +197,41 @@
             tg.HapticFeedback.impactOccurred('light');
         };
 
+        window.buyPackage = async (cost, addSpeed) => {
+            if (wallet < cost) return tg.showAlert("Saldo tidak cukup!");
+            tg.showConfirm(`Beli hardware ${cost} TON?`, async (ok) => {
+                if(ok) {
+                    wallet -= cost; speed += addSpeed; updateUI();
+                    await updateDoc(doc(db, "users", userId), { wallet, speed });
+                    tg.showAlert("Berhasil!");
+                }
+            });
+        };
+
+        window.handleWD = async () => {
+            const amt = parseFloat(document.getElementById('wd-amt').value);
+            if(amt < 1 || wallet < amt) return tg.showAlert("Saldo tidak cukup atau Min 1 TON!");
+            wallet -= amt; updateUI();
+            await updateDoc(doc(db, "users", userId), { wallet });
+            tg.showAlert("WD Request Terkirim!");
+        };
+
         window.claimMining = async () => {
-            if(balance < 0.1) return tg.showAlert("Minimal claim 0.1 TON!");
+            if(balance < 0.1) return tg.showAlert("Min 0.1 TON!");
             wallet += balance; balance = 0; updateUI();
             await updateDoc(doc(db, "users", userId), { balance: 0, wallet });
-            tg.showAlert("Claim Berhasil! Saldo masuk ke Wallet Internal.");
+            tg.showAlert("Claim Sukses!");
         };
 
         window.copyLink = () => {
-            const link = document.getElementById('ref-link').innerText;
-            navigator.clipboard.writeText(link);
-            tg.showAlert("Link Referral Berhasil Disalin!");
+            navigator.clipboard.writeText(document.getElementById('ref-link').innerText);
+            tg.showAlert("Link Copied!");
         };
 
-        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-            manifestUrl: 'https://mabarrra670-max.github.io/MBTminer/tonconnect-manifest.json',
-            buttonRootId: 'ton-connect-button'
-        });
+        setInterval(() => { balance += (speed / 60); document.getElementById('balance-display').innerText = balance.toFixed(6); }, 1000);
+        setInterval(async () => { if(userId !== "guest_dev") await updateDoc(doc(db, "users", userId), { balance }); }, 10000);
 
         loadData();
     </script>
 </body>
-                </html>
+</html>

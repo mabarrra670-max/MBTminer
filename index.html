@@ -2,135 +2,119 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBTminer Premium</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MBTminer Pro V2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@400;700&display=swap');
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; height: 100vh; margin: 0; padding: 0; overflow: hidden; }
         .font-orbit { font-family: 'Orbitron', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); }
-        .btn-blue { background: linear-gradient(135deg, #0088cc, #0055aa); box-shadow: 0 4px 15px rgba(0,136,204,0.3); }
-        .nav-active { color: #0088cc !important; transform: scale(1.1); }
-        .mining-glow { filter: drop-shadow(0 0 15px rgba(0, 136, 204, 0.5)); }
-        .hidden { display: none !important; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
+        .active-tab { color: #0088cc !important; border-top: 2px solid #0088cc; }
+        .page { display: none; height: calc(100vh - 160px); overflow-y: auto; padding-bottom: 20px; }
+        .page.active { display: block; }
+        .mining-circle { position: relative; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #0088cc22 0%, transparent 70%); border: 2px solid #0088cc44; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+        .mining-circle i { font-size: 80px; color: #0088cc; filter: drop-shadow(0 0 15px #0088cc); }
     </style>
 </head>
 <body class="flex flex-col">
 
-    <header class="p-6 flex justify-between items-center z-50">
+    <header class="p-6 flex justify-between items-end border-b border-white/5 bg-black">
         <div>
-            <h1 class="text-2xl font-black font-orbit tracking-tighter text-[#0088cc]">MBT<span class="text-white">MINER</span></h1>
-            <div id="user-info" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1">
-                <i class="fas fa-circle text-green-500 text-[6px] animate-pulse"></i>
-                <span id="display-name">Loading...</span>
-            </div>
+            <h1 class="text-xl font-black font-orbit text-[#0088cc]">MBT<span class="text-white">MINER</span></h1>
+            <p id="user-display" class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Loading User...</p>
         </div>
         <div class="text-right">
-            <p class="text-[9px] font-bold text-gray-500 uppercase">Balance</p>
-            <div class="flex items-center justify-end gap-1">
-                <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" class="w-4 h-4" alt="">
-                <span id="balance" class="text-xl font-black font-orbit">0.000000</span>
-            </div>
+            <p class="text-[9px] text-gray-500 font-bold uppercase">TON Earnings</p>
+            <span id="balance-display" class="text-xl font-black font-orbit text-green-400">0.000000</span>
         </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto px-6 pb-32">
-        
-        <section id="dashboard" class="page-content space-y-8 pt-10 text-center">
-            <div class="relative inline-block">
-                <div class="w-48 h-48 rounded-full border-2 border-[#0088cc]/20 flex items-center justify-center mx-auto mining-glow">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3514/3514392.png" class="w-32 h-32 animate-[spin_10s_linear_infinite]" alt="">
-                </div>
+    <div id="main-container" class="flex-1">
+        <section id="page-mining" class="page active px-6 pt-10 text-center">
+            <div class="mining-circle mb-8">
+                <i class="fas fa-atom animate-spin-slow"></i>
             </div>
-            <div class="space-y-1">
-                <p id="current-speed" class="text-2xl font-black font-orbit">0.00001 <span class="text-xs text-[#0088cc]">TON/M</span></p>
-                <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em]">Mining Power Active</p>
+            <div class="mb-8">
+                <p id="speed-display" class="text-2xl font-black font-orbit">0.00001 <span class="text-xs text-[#0088cc]">TON/M</span></p>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Mining Rate Active</p>
             </div>
-            <button onclick="claimMining()" class="w-full btn-blue py-5 rounded-2xl font-black text-sm uppercase tracking-widest active:scale-95 transition-all">
-                Claim Results
+            <button onclick="claimMining()" class="w-full bg-[#0088cc] hover:bg-[#0099ee] py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-blue-500/20 active:scale-95 transition-all">
+                Claim to Profile (Min 0.1)
             </button>
         </section>
 
-        <section id="shop" class="page-content hidden space-y-4">
-            <h2 class="text-xl font-black font-orbit text-[#0088cc] uppercase">Hardware Shop</h2>
-            <div class="glass p-5 rounded-3xl flex justify-between items-center border-r-4 border-[#0088cc]">
+        <section id="page-shop" class="page px-6 pt-6">
+            <h2 class="text-lg font-black font-orbit mb-6 text-[#0088cc]">HARDWARE SHOP</h2>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center mb-4">
                 <div>
-                    <h3 class="font-bold">ASIC Miner v1</h3>
-                    <p class="text-xs text-gray-400">+0.01 TON/Min</p>
+                    <h3 class="font-bold">GTX Miner v.1</h3>
+                    <p class="text-[10px] text-gray-400">+0.01 TON/Min</p>
                 </div>
-                <button onclick="buyPackage(1, 0.01)" class="btn-blue px-6 py-3 rounded-xl font-black text-xs">1 TON</button>
+                <button onclick="buyPackage(1, 0.01)" class="bg-[#0088cc] px-6 py-3 rounded-xl font-black text-xs">1 TON</button>
             </div>
         </section>
 
-        <section id="deposit" class="page-content hidden space-y-6 text-center">
-            <div class="glass p-8 rounded-[3rem] space-y-4">
-                <h2 class="text-xl font-black font-orbit">Deposit TON</h2>
-                <p class="text-xs text-gray-400">Connect your wallet to recharge your internal balance.</p>
-                <div id="ton-connect-button" class="flex justify-center"></div>
-                <div id="deposit-form" class="hidden space-y-4 pt-4">
-                    <input type="number" id="deposit-amount" placeholder="0.00" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-center font-bold text-xl outline-none">
-                    <button onclick="sendTransaction()" class="w-full btn-blue py-4 rounded-2xl font-black">SEND TRANSACTION</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="referral" class="page-content hidden space-y-6">
-            <h2 class="text-xl font-black font-orbit text-[#0088cc] uppercase italic text-center">Invite & Earn</h2>
-            <div class="glass p-6 rounded-3xl space-y-4 border-dashed border-[#0088cc]/50">
-                <div class="text-center">
-                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-2 text-center">Your Referral Link</p>
-                    <code id="ref-link" class="bg-black/40 p-3 rounded-xl text-[10px] block border border-white/5 text-[#0088cc] break-all">Loading link...</code>
-                </div>
-                <button onclick="copyRef()" class="w-full bg-white/10 py-3 rounded-xl text-[10px] font-bold uppercase hover:bg-white/20">Copy Link</button>
-                <div class="bg-blue-500/10 p-4 rounded-2xl border border-blue-500/20">
-                    <p class="text-[10px] text-blue-400 leading-relaxed font-bold">
-                        🎁 <span class="text-white">BONUS:</span> Dapatkan <span class="text-white">1 TON</span> otomatis masuk ke Wallet Internal setiap teman yang Anda undang melakukan deposit pertama!
-                    </p>
+        <section id="page-deposit" class="page px-6 pt-6 text-center">
+            <div class="glass p-8 rounded-3xl">
+                <h2 class="text-xl font-black font-orbit mb-4">DEPOSIT TON</h2>
+                <div id="ton-connect-button" class="flex justify-center mb-6"></div>
+                <div id="deposit-form" class="hidden space-y-4">
+                    <input type="number" id="deposit-input" placeholder="0.00" class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-center font-bold text-xl outline-none text-[#0088cc]">
+                    <button onclick="sendDeposit()" class="w-full bg-green-600 py-4 rounded-xl font-black text-sm">CONFIRM DEPOSIT</button>
                 </div>
             </div>
         </section>
 
-        <section id="profile" class="page-content hidden space-y-6">
-            <div class="glass p-6 rounded-3xl text-center space-y-2">
-                <p class="text-[10px] text-gray-500 uppercase font-bold">Internal Balance</p>
-                <p class="text-4xl font-black font-orbit text-[#0088cc]"><span id="wallet-balance">0.00</span> <span class="text-sm">TON</span></p>
-            </div>
-            <div class="space-y-3">
-                <h3 class="text-xs font-bold uppercase text-gray-500 ml-2">Withdraw Assets</h3>
-                <div class="glass p-6 rounded-3xl space-y-4 border-red-500/20 border">
-                    <input type="text" id="wd-address" placeholder="TON Wallet Address" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs outline-none">
-                    <input type="number" id="wd-amount" placeholder="Min 10 TON" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl text-xs outline-none">
-                    <button onclick="processWithdraw()" class="w-full bg-red-600 py-4 rounded-2xl font-black text-xs uppercase">Withdraw Now</button>
+        <section id="page-invite" class="page px-6 pt-6 text-center">
+            <h2 class="text-xl font-black font-orbit mb-4 text-[#0088cc]">REFERRAL PROGRAM</h2>
+            <div class="glass p-6 rounded-3xl space-y-4">
+                <p class="text-xs text-gray-300">Ajak teman dan dapatkan bonus 1 TON setelah teman deposit!</p>
+                <div class="bg-black/50 p-4 rounded-xl border border-white/5 break-all">
+                    <code id="ref-link" class="text-[10px] text-[#0088cc]">https://t.me/NAMA_BOT_KAMU?start=...</code>
                 </div>
+                <button onclick="copyLink()" class="w-full bg-white/10 py-3 rounded-xl text-xs font-bold uppercase">Copy Link</button>
             </div>
         </section>
-    </main>
 
-    <nav class="fixed bottom-6 left-6 right-6 h-20 glass rounded-[2.5rem] flex items-center justify-around px-2 z-[100]">
-        <button onclick="showSection('dashboard')" class="nav-btn nav-active flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-bolt text-lg"></i><span class="text-[8px] font-black uppercase">Mining</span>
+        <section id="page-profile" class="page px-6 pt-6">
+            <div class="glass p-6 rounded-3xl text-center mb-6">
+                <p class="text-[10px] text-gray-500 font-black uppercase mb-1">Internal Wallet</p>
+                <p class="text-3xl font-black font-orbit text-green-400"><span id="wallet-display">0.00</span> <span class="text-xs">TON</span></p>
+            </div>
+            <div class="glass p-6 rounded-3xl space-y-4 border-red-500/20 border">
+                <h3 class="text-[10px] font-black text-red-500 uppercase">Withdraw Funds</h3>
+                <input type="text" id="wd-addr" placeholder="Destination Address" class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-xs outline-none">
+                <input type="number" id="wd-amt" placeholder="Amount (Min 10)" class="w-full bg-black/40 border border-white/10 p-4 rounded-xl text-xs outline-none">
+                <button onclick="handleWD()" class="w-full bg-red-600 py-4 rounded-xl font-black text-xs uppercase">Submit Withdraw</button>
+            </div>
+        </section>
+    </div>
+
+    <nav class="h-20 bg-black border-t border-white/5 flex justify-around items-center px-2 pb-2">
+        <button onclick="switchTab('page-mining', this)" class="flex flex-col items-center gap-1 text-gray-500 active-tab">
+            <i class="fas fa-bolt text-lg"></i><span class="text-[8px] font-bold uppercase">Mining</span>
         </button>
-        <button onclick="showSection('shop')" class="nav-btn flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-microchip text-lg"></i><span class="text-[8px] font-black uppercase">Shop</span>
+        <button onclick="switchTab('page-shop', this)" class="flex flex-col items-center gap-1 text-gray-500">
+            <i class="fas fa-store text-lg"></i><span class="text-[8px] font-bold uppercase">Shop</span>
         </button>
-        <button onclick="showSection('deposit')" class="nav-btn flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-wallet text-lg"></i><span class="text-[8px] font-black uppercase">Topup</span>
+        <button onclick="switchTab('page-deposit', this)" class="flex flex-col items-center gap-1 text-gray-500">
+            <i class="fas fa-wallet text-lg"></i><span class="text-[8px] font-bold uppercase">Topup</span>
         </button>
-        <button onclick="showSection('referral')" class="nav-btn flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-users text-lg"></i><span class="text-[8px] font-black uppercase">Invite</span>
+        <button onclick="switchTab('page-invite', this)" class="flex flex-col items-center gap-1 text-gray-500">
+            <i class="fas fa-users text-lg"></i><span class="text-[8px] font-bold uppercase">Invite</span>
         </button>
-        <button onclick="showSection('profile')" class="nav-btn flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-user-circle text-lg"></i><span class="text-[8px] font-black uppercase">Account</span>
+        <button onclick="switchTab('page-profile', this)" class="flex flex-col items-center gap-1 text-gray-500">
+            <i class="fas fa-user-circle text-lg"></i><span class="text-[8px] font-bold uppercase">Account</span>
         </button>
     </nav>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, query, collection, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBDzf87x1MPfoDgov_Gz2HpSYy5VfN8DjQ",
@@ -147,59 +131,66 @@
         tg.ready();
         tg.expand();
 
-        const userId = tg.initDataUnsafe?.user?.id?.toString() || "dev_user";
-        const inviterId = tg.initDataUnsafe?.start_param || null;
+        const userId = tg.initDataUnsafe?.user?.id?.toString() || "guest_dev";
         let balance = 0, wallet = 0, speed = 0.00001;
 
-        async function init() {
+        async function loadData() {
             const ref = doc(db, "users", userId);
             const snap = await getDoc(ref);
-            if (snap.exists()) {
-                const data = snap.data();
-                balance = data.balance || 0;
-                wallet = data.wallet || 0;
-                speed = data.speed || 0.00001;
+            if(snap.exists()){
+                const d = snap.data();
+                balance = d.balance || 0;
+                wallet = d.wallet || 0;
+                speed = d.speed || 0.00001;
             } else {
-                await setDoc(ref, { 
-                    balance: 0, 
-                    wallet: 0, 
-                    speed: 0.00001, 
-                    invitedBy: inviterId,
-                    history: [] 
-                });
+                await setDoc(ref, { balance: 0, wallet: 0, speed: 0.00001, invitedBy: tg.initDataUnsafe?.start_param || null });
             }
-            document.getElementById('display-name').innerText = tg.initDataUnsafe?.user?.username || "Guest Miner";
-            document.getElementById('ref-link').innerText = `https://t.me/NAMA_BOT_KAMU?start=${userId}`;
             updateUI();
         }
 
         function updateUI() {
-            document.getElementById('balance').innerText = balance.toFixed(6);
-            document.getElementById('wallet-balance').innerText = wallet.toFixed(4);
-            document.getElementById('current-speed').innerText = `${speed} TON/M`;
+            document.getElementById('balance-display').innerText = balance.toFixed(6);
+            document.getElementById('wallet-display').innerText = wallet.toFixed(4);
+            document.getElementById('speed-display').innerText = `${speed} TON/M`;
+            document.getElementById('user-display').innerText = tg.initDataUnsafe?.user?.first_name || "GUEST";
+            document.getElementById('ref-link').innerText = `https://t.me/MBTminer_bot?start=${userId}`;
         }
 
+        // Mining Loop
         setInterval(() => {
             balance += (speed / 60);
-            document.getElementById('balance').innerText = balance.toFixed(6);
+            document.getElementById('balance-display').innerText = balance.toFixed(6);
         }, 1000);
 
-        // Fungsi Perpindahan Halaman (Button Fix)
-        window.showSection = (id) => {
-            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
-            event.currentTarget.classList.add('nav-active');
+        // Auto Save ke Firebase (Tiap 10 Detik agar data tidak hilang)
+        setInterval(async () => {
+            if(userId !== "guest_dev") {
+                await updateDoc(doc(db, "users", userId), { balance: balance });
+            }
+        }, 10000);
+
+        window.switchTab = (id, btn) => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
+            btn.classList.add('active-tab');
             tg.HapticFeedback.impactOccurred('light');
         };
 
         window.claimMining = async () => {
-            if(balance < 0.1) return tg.showAlert("Minimal claim 0.1 TON!");
+            if(balance < 0.1) return tg.showAlert("Minimal 0.1 TON!");
             wallet += balance;
             balance = 0;
+            updateUI();
             await updateDoc(doc(db, "users", userId), { balance: 0, wallet: wallet });
             tg.HapticFeedback.notificationOccurred('success');
-            location.reload();
+            tg.showAlert("Berhasil Claim ke Profile!");
+        };
+
+        window.copyLink = () => {
+            const link = document.getElementById('ref-link').innerText;
+            navigator.clipboard.writeText(link);
+            tg.showScanQrPopup({ text: "Link Berhasil Disalin!" });
         };
 
         // TON CONNECT
@@ -208,38 +199,9 @@
             buttonRootId: 'ton-connect-button'
         });
 
-        window.sendTransaction = async () => {
-            const amount = document.getElementById('deposit-amount').value;
-            if(!amount || amount <= 0) return;
-            try {
-                const tx = {
-                    validUntil: Math.floor(Date.now() / 1000) + 300,
-                    messages: [{ address: "UQC8yBpZY5KwBftoV5SaXc43HSgyXki85iF9qNzNgF6uVNpd", amount: (amount * 1000000000).toString() }]
-                };
-                await tonConnectUI.sendTransaction(tx);
-                
-                // Logika Referral Bonus (Pemberian 1 TON ke Pengundang)
-                const userRef = await getDoc(doc(db, "users", userId));
-                const refBy = userRef.data().invitedBy;
-                if(refBy) {
-                    const inviterRef = doc(db, "users", refBy);
-                    const inviterSnap = await getDoc(inviterRef);
-                    if(inviterSnap.exists()){
-                        await updateDoc(inviterRef, { wallet: (inviterSnap.data().wallet || 0) + 1 });
-                    }
-                }
-                alert("Deposit Success!");
-            } catch (e) { console.error(e); }
-        };
-
-        window.copyRef = () => {
-            const link = document.getElementById('ref-link').innerText;
-            navigator.clipboard.writeText(link);
-            tg.showScanQrPopup({ text: "Link Copied!" });
-        };
-
         tonConnectUI.onStatusChange(w => { document.getElementById('deposit-form').style.display = w ? 'block' : 'none'; });
-        init();
+
+        loadData();
     </script>
 </body>
-</html>
+    </html>

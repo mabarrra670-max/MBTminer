@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MBTminer Pro V2</title>
+    <title>MBTminer Pro Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; height: 100vh; margin: 0; padding: 0; overflow: hidden; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; height: 100vh; margin: 0; padding: 0; overflow: hidden; display: flex; flex-direction: column; }
         .font-orbit { font-family: 'Orbitron', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
         .active-tab { color: #0088cc !important; border-top: 2px solid #0088cc; }
-        .page { display: none; height: calc(100vh - 160px); overflow-y: auto; padding-bottom: 40px; }
+        /* Memastikan area konten tidak tertutup navigasi */
+        #main-container { flex: 1; overflow-y: auto; position: relative; z-index: 10; padding-bottom: 100px; }
+        .page { display: none; padding: 20px; }
         .page.active { display: block; }
-        .mining-circle { position: relative; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #0088cc22 0%, transparent 70%); border: 2px solid #0088cc44; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
-        .mining-circle i { font-size: 60px; color: #0088cc; filter: drop-shadow(0 0 15px #0088cc); }
-        nav { z-index: 9999; } /* Memastikan navigasi selalu di atas agar bisa diklik */
+        /* Navigasi tetap di paling depan */
+        nav { position: fixed; bottom: 0; left: 0; right: 0; height: 80px; background: #000; border-t: 1px solid rgba(255,255,255,0.05); z-index: 9999; display: flex; justify-content: space-around; align-items: center; }
+        button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
-<body class="flex flex-col">
+<body>
 
-    <header class="p-6 flex justify-between items-end border-b border-white/5 bg-black">
+    <header class="p-6 flex justify-between items-end border-b border-white/5 bg-black z-20">
         <div>
             <h1 class="text-xl font-black font-orbit text-[#0088cc]">MBT<span class="text-white">MINER</span></h1>
             <p id="user-display" class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Loading...</p>
@@ -34,78 +36,71 @@
         </div>
     </header>
 
-    <div id="main-container" class="flex-1 relative">
-        <section id="page-mining" class="page active px-6 pt-10 text-center">
-            <div class="mining-circle mb-8">
-                <i class="fas fa-atom animate-spin-slow"></i>
+    <div id="main-container">
+        <section id="page-mining" class="page active text-center">
+            <div class="w-40 h-40 rounded-full border-2 border-[#0088cc]/20 flex items-center justify-center mx-auto mb-8 bg-[#0088cc]/5">
+                <i class="fas fa-atom text-5xl text-[#0088cc] animate-spin"></i>
             </div>
-            <div class="mb-8">
-                <p id="speed-display" class="text-2xl font-black font-orbit">0.00001 <span class="text-xs text-[#0088cc]">TON/M</span></p>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Mining Power</p>
-            </div>
-            <button onclick="claimMining()" class="w-full bg-[#0088cc] py-5 rounded-2xl font-black text-sm uppercase tracking-widest active:scale-95 transition-all">
-                Claim to Profile
-            </button>
+            <p id="speed-display" class="text-2xl font-black font-orbit mb-6">0.00001 <span class="text-xs text-[#0088cc]">TON/M</span></p>
+            <button onclick="claimMining()" class="w-full bg-[#0088cc] py-4 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all">Claim to Profile</button>
         </section>
 
-        <section id="page-shop" class="page px-6 pt-6">
+        <section id="page-shop" class="page">
             <h2 class="text-lg font-black font-orbit mb-6 text-[#0088cc]">HARDWARE SHOP</h2>
-            
             <div class="glass p-5 rounded-2xl flex justify-between items-center mb-4">
                 <div>
-                    <h3 class="font-bold text-sm">GPU RTX 3060</h3>
-                    <p class="text-[10px] text-green-400">+0.01 TON/Min</p>
+                    <h3 class="font-bold">Entry Rig</h3>
+                    <p class="text-[10px] text-green-400">+0.01 TON/M</p>
                 </div>
-                <button onclick="buyPackage(1, 0.01)" class="bg-[#0088cc] px-6 py-3 rounded-xl font-black text-xs active:scale-90 transition-transform">1 TON</button>
+                <button onclick="buyPackage(1, 0.01)" class="bg-[#0088cc] px-6 py-2 rounded-xl font-black text-xs active:scale-90">1 TON</button>
             </div>
-
             <div class="glass p-5 rounded-2xl flex justify-between items-center mb-4">
                 <div>
-                    <h3 class="font-bold text-sm">ASIC Miner S19</h3>
-                    <p class="text-[10px] text-green-400">+0.10 TON/Min</p>
+                    <h3 class="font-bold">Pro Miner</h3>
+                    <p class="text-[10px] text-green-400">+0.10 TON/M</p>
                 </div>
-                <button onclick="buyPackage(5, 0.10)" class="bg-[#0088cc] px-6 py-3 rounded-xl font-black text-xs active:scale-90 transition-transform">5 TON</button>
+                <button onclick="buyPackage(5, 0.10)" class="bg-[#0088cc] px-6 py-2 rounded-xl font-black text-xs active:scale-90">5 TON</button>
             </div>
         </section>
 
-        <section id="page-deposit" class="page px-6 pt-6 text-center">
+        <section id="page-deposit" class="page text-center">
             <div class="glass p-8 rounded-3xl">
-                <h2 class="text-xl font-black font-orbit mb-4">DEPOSIT TON</h2>
-                <div id="ton-connect-button" class="flex justify-center mb-6"></div>
+                <h2 class="text-lg font-black font-orbit mb-4">DEPOSIT</h2>
+                <div id="ton-connect-button" class="flex justify-center"></div>
             </div>
         </section>
 
-        <section id="page-invite" class="page px-6 pt-6 text-center">
-            <h2 class="text-xl font-black font-orbit mb-4 text-[#0088cc]">REFERRAL</h2>
-            <div class="glass p-6 rounded-3xl space-y-4">
-                <code id="ref-link" class="text-[10px] text-[#0088cc] break-all">Loading...</code>
-                <button onclick="copyLink()" class="w-full bg-white/10 py-3 rounded-xl text-xs font-bold">COPY LINK</button>
+        <section id="page-invite" class="page text-center">
+            <h2 class="text-lg font-black font-orbit mb-4">REFERRAL</h2>
+            <div class="glass p-6 rounded-2xl break-all">
+                <p id="ref-link" class="text-[10px] text-[#0088cc] mb-4">Loading link...</p>
+                <button onclick="copyLink()" class="bg-white/10 w-full py-2 rounded-xl font-bold text-xs uppercase">Copy Link</button>
             </div>
         </section>
 
-        <section id="page-profile" class="page px-6 pt-6">
-            <div class="glass p-6 rounded-3xl text-center mb-6">
-                <p class="text-[10px] text-gray-500 font-black uppercase">Wallet Internal</p>
+        <section id="page-profile" class="page">
+            <div class="glass p-6 rounded-2xl text-center">
+                <p class="text-[10px] text-gray-500 font-bold uppercase">Wallet Balance</p>
                 <p class="text-3xl font-black font-orbit text-green-400"><span id="wallet-display">0.00</span> TON</p>
             </div>
         </section>
     </div>
 
-    <nav class="h-20 bg-black border-t border-white/5 flex justify-around items-center px-2 pb-2">
-        <button onclick="switchTab('page-mining', this)" class="flex flex-col items-center gap-1 text-gray-500 active-tab">
-            <i class="fas fa-bolt text-lg"></i><span class="text-[8px] font-bold uppercase">Mining</span>
+    <nav>
+        <button onclick="switchTab('page-mining', this)" class="active-tab flex flex-col items-center gap-1 text-gray-500">
+            <i class="fas fa-bolt"></i><span class="text-[8px] font-bold">MINING</span>
         </button>
         <button onclick="switchTab('page-shop', this)" class="flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-store text-lg"></i><span class="text-[8px] font-bold uppercase">Shop</span>
+            <i class="fas fa-store"></i><span class="text-[8px] font-bold">SHOP</span>
         </button>
         <button onclick="switchTab('page-deposit', this)" class="flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-wallet text-lg"></i><span class="text-[8px] font-bold uppercase">Topup</span>
+            <i class="fas fa-wallet"></i><span class="text-[8px] font-bold">TOPUP</span>
         </button>
         <button onclick="switchTab('page-invite', this)" class="flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-users text-lg"></i><span class="text-[8px] font-bold uppercase">Invite</span>
+            <i class="fas fa-users"></i><span class="text-[8px] font-bold">INVITE</span>
         </button>
         <button onclick="switchTab('page-profile', this)" class="flex flex-col items-center gap-1 text-gray-500">
-            <i class="fas fa-user-circle text-lg"></i><span class="text-[8px] font-bold uppercase">Account</span>
+            <i class="fas fa-user"></i><span class="text-[8px] font-bold">ACCOUNT</span>
         </button>
     </nav>
 
@@ -152,28 +147,24 @@
             document.getElementById('ref-link').innerText = `https://t.me/MBTminer_bot?start=${userId}`;
         }
 
-        // Logic Beli (Fungsi yang diperbaiki)
+        // FUNGSI BELI FIX
         window.buyPackage = async (cost, addSpeed) => {
             if (wallet < cost) {
-                tg.showAlert("Saldo Wallet Internal tidak cukup! Silakan Deposit terlebih dahulu.");
+                tg.showAlert("Saldo tidak cukup!");
                 return;
             }
-            
             tg.showConfirm(`Beli hardware seharga ${cost} TON?`, async (ok) => {
-                if (ok) {
+                if(ok) {
                     wallet -= cost;
                     speed += addSpeed;
                     updateUI();
-                    await updateDoc(doc(db, "users", userId), { 
-                        wallet: wallet, 
-                        speed: speed 
-                    });
-                    tg.showAlert("Hardware Berhasil Dipasang! Kecepatan mining bertambah.");
+                    await updateDoc(doc(db, "users", userId), { wallet, speed });
+                    tg.showAlert("Pembelian Berhasil!");
                 }
             });
         };
 
-        // Mining Loop & Autosave
+        // MINING & AUTOSAVE FIX
         setInterval(() => {
             balance += (speed / 60);
             document.getElementById('balance-display').innerText = balance.toFixed(6);
@@ -181,10 +172,11 @@
 
         setInterval(async () => {
             if(userId !== "guest_dev") {
-                await updateDoc(doc(db, "users", userId), { balance: balance });
+                await updateDoc(doc(db, "users", userId), { balance });
             }
-        }, 8000);
+        }, 10000);
 
+        // TAB SWITCHER FIX
         window.switchTab = (id, btn) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -194,13 +186,24 @@
         };
 
         window.claimMining = async () => {
-            if(balance < 0.1) return tg.showAlert("Minimal claim 0.1 TON!");
+            if(balance < 0.1) return tg.showAlert("Min 0.1 TON!");
             wallet += balance; balance = 0; updateUI();
-            await updateDoc(doc(db, "users", userId), { balance: 0, wallet: wallet });
+            await updateDoc(doc(db, "users", userId), { balance: 0, wallet });
             tg.showAlert("Claim Berhasil!");
         };
+
+        window.copyLink = () => {
+            const link = document.getElementById('ref-link').innerText;
+            navigator.clipboard.writeText(link);
+            tg.showAlert("Link Copied!");
+        };
+
+        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+            manifestUrl: 'https://mabarrra670-max.github.io/MBTminer/tonconnect-manifest.json',
+            buttonRootId: 'ton-connect-button'
+        });
 
         loadData();
     </script>
 </body>
-                    </html>
+</html>

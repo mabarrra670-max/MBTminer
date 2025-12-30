@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTminer - Professional TON Mining</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .mining-glow { box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+        .nav-active { color: #38bdf8 !important; border-top: 2px solid #38bdf8; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <header class="p-5 flex justify-between items-center border-b border-slate-800 bg-slate-950/50 sticky top-0 z-50 glass">
+        <div>
+            <h1 class="text-2xl font-black tracking-tighter text-sky-400">MBT<span class="text-white">MINER</span></h1>
+            <p id="user-name" class="text-[10px] text-slate-400 uppercase tracking-widest leading-none">Loading User...</p>
+        </div>
+        <div class="text-right">
+            <p class="text-[10px] text-slate-500 font-bold uppercase">Balance</p>
+            <div class="flex items-center gap-2">
+                <img src="https://cryptologos.cc/logos/toncoin-ton-logo.png" class="w-4 h-4" alt="ton">
+                <span id="balance" class="text-xl font-mono font-bold text-green-400">0.000000</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="p-4 space-y-6">
+        
+        <section id="dashboard" class="content-section animate-fade-in">
+            <div class="glass p-6 rounded-3xl mining-glow text-center space-y-4">
+                <div class="relative inline-block">
+                    <div class="w-32 h-32 rounded-full border-4 border-sky-500/30 flex items-center justify-center mx-auto">
+                        <i class="fas fa-microchip text-5xl text-sky-400 animate-pulse"></i>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-slate-400 text-sm">Mining Speed</p>
+                    <p id="current-speed" class="text-2xl font-bold">0.00001 <span class="text-xs text-sky-500">TON/MIN</span></p>
+                </div>
+                <div class="grid grid-cols-2 gap-3 pt-4">
+                    <button onclick="showSection('deposit')" class="bg-sky-600 p-3 rounded-2xl font-bold text-sm transition-transform active:scale-95">DEPOSIT</button>
+                    <button onclick="showSection('withdraw')" class="bg-slate-800 p-3 rounded-2xl font-bold text-sm transition-transform active:scale-95">WITHDRAW</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="shop" class="content-section hidden space-y-4">
+            <h2 class="text-xl font-bold px-2 text-sky-400">Mining Packages</h2>
+            
+            <div class="glass p-5 rounded-2xl flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-lg">Paket Pemula</h3>
+                    <p class="text-xs text-slate-400">Profit: 0.01 TON / Min</p>
+                    <p class="text-[10px] text-sky-500 font-mono">Durasi: 30 Hari</p>
+                </div>
+                <button onclick="buyPackage(1, 0.01)" class="bg-sky-500 px-4 py-2 rounded-xl text-sm font-bold">1 TON</button>
+            </div>
+
+            <div class="glass p-5 rounded-2xl flex justify-between items-center border-sky-500/20">
+                <div>
+                    <h3 class="font-bold text-lg">Paket Normal</h3>
+                    <p class="text-xs text-slate-400">Profit: 0.1 TON / Min</p>
+                    <p class="text-[10px] text-sky-500 font-mono">Durasi: 30 Hari</p>
+                </div>
+                <button onclick="buyPackage(5, 0.1)" class="bg-sky-500 px-4 py-2 rounded-xl text-sm font-bold">5 TON</button>
+            </div>
+
+            <div class="glass p-5 rounded-2xl flex justify-between items-center border-yellow-500/20">
+                <div>
+                    <h3 class="font-bold text-lg text-yellow-400">Paket Reguler</h3>
+                    <p class="text-xs text-slate-400">Profit: 0.5 TON / Min</p>
+                    <p class="text-[10px] text-sky-500 font-mono">Durasi: 30 Hari</p>
+                </div>
+                <button onclick="buyPackage(15, 0.5)" class="bg-yellow-600 px-4 py-2 rounded-xl text-sm font-bold">15 TON</button>
+            </div>
+        </section>
+
+        <section id="withdraw" class="content-section hidden">
+            <div class="glass p-6 rounded-3xl space-y-4">
+                <h2 class="text-xl font-bold text-red-400">Withdrawal</h2>
+                <div class="space-y-2">
+                    <label class="text-xs text-slate-400 uppercase">TON Wallet Address</label>
+                    <input type="text" placeholder="UQ..." class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm outline-none focus:border-sky-500">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs text-slate-400 uppercase">Amount</label>
+                    <input type="number" placeholder="Min 10 TON" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm outline-none focus:border-sky-500">
+                </div>
+                <button onclick="alert('Permintaan Withdraw Terkirim!')" class="w-full bg-red-600 py-3 rounded-xl font-bold">PROSES WITHDRAW</button>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="fixed bottom-0 w-full glass border-t border-slate-800 flex justify-around p-4 z-50">
+        <button onclick="showSection('dashboard')" class="flex flex-col items-center gap-1 nav-active text-slate-400">
+            <i class="fas fa-home"></i><span class="text-[10px]">Home</span>
+        </button>
+        <button onclick="showSection('shop')" class="flex flex-col items-center gap-1 text-slate-400">
+            <i class="fas fa-shopping-cart"></i><span class="text-[10px]">Shop</span>
+        </button>
+        <button onclick="showSection('withdraw')" class="flex flex-col items-center gap-1 text-slate-400">
+            <i class="fas fa-wallet"></i><span class="text-[10px]">Payout</span>
+        </button>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyCyMnLJJo2QTZZ7cBGigtj0BNNfqjHngvU",
+            authDomain: "loveclicker-86b7e.firebaseapp.com",
+            projectId: "loveclicker-86b7e",
+            storageBucket: "loveclicker-86b7e.firebasestorage.app",
+            messagingSenderId: "219092692738",
+            appId: "1:219092692738:web:f4dd71eee14a9024f59c1b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+
+        // Data User (ID unik dari Telegram atau default)
+        const userId = tg.initDataUnsafe?.user?.id?.toString() || "guest_user";
+        const userNameDisplay = document.getElementById('user-name');
+        userNameDisplay.innerText = tg.initDataUnsafe?.user?.first_name || "GUEST ACCOUNT";
+
+        let userBalance = 0;
+        let userSpeed = 0.00001; // Kecepatan dasar per menit
+
+        // 1. Sync dengan Firestore
+        async function syncUserData() {
+            const userRef = doc(db, "users", userId);
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+                // User baru
+                await setDoc(userRef, {
+                    balance: 0,
+                    speed: 0.00001,
+                    lastUpdate: Date.now()
+                });
+            } else {
+                const data = userSnap.data();
+                userBalance = data.balance;
+                userSpeed = data.speed;
+                document.getElementById('current-speed').innerText = `${userSpeed} TON/MIN`;
+            }
+        }
+
+        // 2. Engine Mining (0.00001 per 1 menit)
+        setInterval(async () => {
+            const increment = userSpeed / 60; // Konversi menit ke detik
+            userBalance += increment;
+            document.getElementById('balance').innerText = userBalance.toFixed(6);
+
+            // Simpan ke cloud setiap 10 detik agar tidak berat
+            if (Math.floor(Date.now() / 1000) % 10 === 0) {
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, { balance: userBalance });
+            }
+        }, 1000);
+
+        // 3. Fungsi Beli Paket
+        window.buyPackage = async (price, addedSpeed) => {
+            if (userBalance >= price) {
+                userBalance -= price;
+                userSpeed = addedSpeed;
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, { 
+                    balance: userBalance, 
+                    speed: userSpeed 
+                });
+                alert("Sukses! Kecepatan mining bertambah.");
+                location.reload();
+            } else {
+                alert("Saldo TON tidak cukup! Silakan Deposit.");
+            }
+        };
+
+        syncUserData();
+    </script>
+
+    <script>
+        // UI Navigation
+        function showSection(id) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('nav-active'));
+            event.currentTarget.classList.add('nav-active');
+        }
+    </script>
+</body>
+              </html>
